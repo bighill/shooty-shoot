@@ -1,0 +1,48 @@
+@import 'vars.less';
+
+* {
+    box-sizing : border-box;
+}
+
+html, body {
+    background  : @color-bg;    
+    color       : darken( @color-fg, 30% );
+    
+    font-family     : @font;
+    letter-spacing  : 3px;
+
+    height      : 100%;
+    margin      : 0;
+    padding     : 0;
+}
+
+#play, #lose, #win {
+    display : flex;
+    flex-direction : column;
+    justify-content : center;
+    align-items : center;
+    height : 100%;
+
+    button {
+        cursor : pointer;
+    }
+}
+
+#lose, #win, #shooty-shoot {
+    display : none;
+}
+
+header {
+    height  : 1.5em;
+
+    strong {
+        color : @color-fg;
+    }
+}
+
+canvas {
+    position    : absolute;
+    background  : @color-canvas-bg;
+    top         : 0;
+    left        : 0;
+}
