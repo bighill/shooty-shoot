@@ -32,7 +32,7 @@ Shot.launch = function( x, y )
     //
     //  notifiy score board
     //
-    // Score.shot();
+    Score.shot();
 };
 
 /*

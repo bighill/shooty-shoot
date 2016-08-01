@@ -28,6 +28,9 @@ var G = {
     },
     els : {
         playBtns : document.getElementsByClassName( 'play-btn'),
+        shots    : document.getElementsByClassName( 'shots' ),
+        hits     : document.getElementsByClassName( 'hits' ),
+        accuracy : document.getElementsByClassName( 'accuracy' ), 
     },
 };
 
@@ -88,6 +91,7 @@ G.play = function()
     G.isPlaying = true;
     window.requestAnimationFrame( G.drawCanvas );
     State.set( 'shooty-shoot' );
+    Score.init();
 };
 
 window.G = G;
