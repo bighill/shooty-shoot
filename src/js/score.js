@@ -24,7 +24,7 @@ var Score = {
 */
 Score.init = function()
 {
-    this.draw();
+    Score.draw();
 };
 
 /*

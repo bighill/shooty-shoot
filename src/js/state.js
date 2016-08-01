@@ -47,6 +47,8 @@ State.set = function( s )
 
 State.apply = function( s )
 {
+    this.current = s.id;
+
     this.clear();
 
     document

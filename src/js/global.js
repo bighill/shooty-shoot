@@ -13,7 +13,7 @@ var G = {
     //
     //  global game speed
     //
-    speed : 0.3,
+    speed : 1.3,
 
     // 
     // values
@@ -50,25 +50,40 @@ var G = {
 G.init = function()
 {
     //
-    //  set 'z' value
-    //  ... which represents both width and height of canvas
+    //  promise that first displays game elements in dom
     //
-    setTimeout( this.setZ, 0 );
+    var p = new Promise(function(resolve, reject)
+    {
+        State.set( 'shooty-shoot' );
+
+        if ( State.current == 'shooty-shoot' )
+            resolve('Success!');
+
+        else
+            reject('Failure!');
+    });
 
     //
-    //  initialize the shooter
+    //  things to do after the State.set() promise
     //
-    setTimeout( Shooter.init, 0 );
-
-    //
-    //  set enemy defaults
-    //
-    setTimeout( Enemy.init, 0 );
+    p.then( G.setZ )
+        .then( Enemy.init )
+        .then( Shooter.init )
+        .then( Shot.init )
+        .then( function() {
+            G.isPlaying = true;
+        })
+        .then( function() {
+            window.requestAnimationFrame( G.drawCanvas );            
+        })
+        .then( Score.init );
 };
 
 /*
 |
 |   set z
+|
+|   ...(it's a new promise)
 |
 */
 G.setZ = function()
@@ -95,7 +110,7 @@ G.drawCanvas = function()
     //
     //  check for all possible collisions
     //
-    //Collision.check();
+    Collision.check();
 
     //
     //  draw the elements
@@ -121,10 +136,8 @@ G.drawCanvas = function()
 G.play = function()
 {
     G.init();
-    G.isPlaying = true;
-    window.requestAnimationFrame( G.drawCanvas );
-    State.set( 'shooty-shoot' );
-    Score.init();
+    // window.requestAnimationFrame( G.drawCanvas );
+    // Score.init();    
 };
 
 /*
@@ -136,6 +149,8 @@ G.play = function()
 */
 G.win = function()
 {
+    G.isPlaying = false;
+    State.set( 'win' );
 };
 
 /*
@@ -147,6 +162,8 @@ G.win = function()
 */
 G.lose = function()
 {
+    G.isPlaying = false;
+    State.set( 'lose' );
 };
 
 window.G = G;

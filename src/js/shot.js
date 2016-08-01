@@ -14,6 +14,16 @@ var Shot = {
 
 /*
 |
+|   init
+|
+*/
+Shot.init = function()
+{
+    Shot.data = _.cloneDeep( Data.shot );
+};
+
+/*
+|
 |   launch
 |
 |   ...initialize a shot

@@ -10,54 +10,30 @@
 
 var Enemy = {
 
-    //
-    //  number of rows
-    //
-    rowN : 5,
+    /*
+    this data set by init()
 
-    //
-    //  number of enemies in each row
-    //
-    colN : 9,
+    data to expect...
 
-    //
-    //  enemy movement speed multiplier
-    //
-    moveMultp : 0.008,
+    rowN (int)
+    colN (int)
+    moveMultp (float)
+    rowWmultp (float)
+    shiftWmultp (float)
+    enemies (array)
 
-    //
-    //  row width multiplier and shift width multiplier should add up to 1
-    //
-    rowWmultp   : 0.7,
-    shiftWmultp : 0.3,
-
-    //
-    //  data for state of each enemy
-    //
-    data : [],
-
-    //
-    //  values set initially and during play
-    //
-    val : {
-
-        //
-        //  values set by sizer()
-        //
-        rowW    : 0,
-        shiftW  : 0,
-        shiftH  : 0,
-        enemyR  : 0,
-        shiftV  : 0,
-
-        //
-        //  track enemy shift direction
-        //
-        xDelta      : 0,
-        yDelta      : 0,
-        movingRight : true,
-        movingDown  : false,
-    },
+    val (obj)
+        rowW (float)
+        shiftW (float)
+        shiftH (float)
+        enemyR (float)
+        shiftV (float)
+        xDelta (float)
+        yDelta (float)
+        movingRight (bool)
+        movingDown (bool)
+    */
+    data : {},
 };
 
 /*
@@ -70,32 +46,37 @@ Enemy.init = function()
     var self = Enemy;
 
     //
+    //  load data from data model
+    //
+    self.data = _.cloneDeep( Data.enemy );
+
+    //
     //  set global enemy values
     //
-    self.val.rowW   = G.z * self.rowWmultp;
-    self.val.shiftW = G.z * self.shiftWmultp;
-    self.val.shiftV = self.moveMultp * G.z * G.speed;
+    self.data.val.rowW   = G.z * self.data.rowWmultp;
+    self.data.val.shiftW = G.z * self.data.shiftWmultp;
+    self.data.val.shiftV = self.data.moveMultp * G.z * G.speed;
     
-    var enemiesAndGapsN = ( self.colN * 2 ) - 1;    
-    self.val.enemyR = ( self.val.rowW / enemiesAndGapsN ) / 2;
+    var enemiesAndGapsN = ( self.data.colN * 2 ) - 1;  
+    self.data.val.enemyR = ( self.data.val.rowW / enemiesAndGapsN ) / 2;
 
-    self.val.shiftH = self.val.enemyR;
+    self.data.val.shiftH = self.data.val.enemyR;
 
     //
     //  default values for each enemy
     //
-    var x = self.val.enemyR,
-        y = self.val.enemyR,
-        r = self.val.enemyR,
+    var x = self.data.val.enemyR,
+        y = self.data.val.enemyR,
+        r = self.data.val.enemyR,
         defaultX = x,
         defaultY = y;
 
     //
     //  initialize each enemy
     //
-    for ( var n = self.rowN - 1; n >= 0; n-- )
+    for ( var n = self.data.rowN - 1; n >= 0; n-- )
     {
-        for ( var i = self.colN - 1; i >= 0; i-- )
+        for ( var i = self.data.colN - 1; i >= 0; i-- )
         {
             self.setRow( x, y, r );        
             x = x + ( r * 4 );
@@ -108,7 +89,7 @@ Enemy.init = function()
     //
     //  notify scoreboard, total # of enemies
     //
-    Score.setEnemies( self.rowN * self.colN );
+    Score.setEnemies( self.data.rowN * self.data.colN );
 };
 
 /*
@@ -127,7 +108,7 @@ Enemy.setRow = function( x, y, r )
             state : 'active',
         };
 
-    this.data.push( enemy );
+    this.data.enemies.push( enemy );
 };
 
 /*
@@ -139,38 +120,38 @@ Enemy.setRow = function( x, y, r )
 */
 Enemy.draw = function( ctx )
 {
-    if ( !this.data[0] )
+    if ( !this.data.enemies[0] )
     {
         G.win();
         return false;
     }
 
-    if ( this.val.movingDown )
+    if ( this.data.val.movingDown )
     {
-        this.val.yDelta = this.val.yDelta + this.val.shiftV;
+        this.data.val.yDelta = this.data.val.yDelta + this.data.val.shiftV;
 
-        if ( this.val.yDelta >= this.val.shiftH )
+        if ( this.data.val.yDelta >= this.data.val.shiftH )
         {
-            this.val.movingDown = false;
-            this.val.yDelta = 0;
+            this.data.val.movingDown = false;
+            this.data.val.yDelta = 0;
         }
 
-        for ( var iDwn = this.data.length - 1; iDwn >= 0; iDwn-- )
-            this._adjustEnemy( this.data[iDwn], ctx, iDwn, this.data, this.val.shiftV ); 
+        for ( var iDwn = this.data.enemies.length - 1; iDwn >= 0; iDwn-- )
+            this._adjustEnemy( this.data.enemies[iDwn], ctx, iDwn, this.data.enemies, this.data.val.shiftV ); 
     }
     else
     {
-        this.val.xDelta = this.val.xDelta + this.val.shiftV;
+        this.data.val.xDelta = this.data.val.xDelta + this.data.val.shiftV;
 
-        if ( this.val.xDelta >= this.val.shiftW )
+        if ( this.data.val.xDelta >= this.data.val.shiftW )
         {
-            this.val.movingRight = !this.val.movingRight;
-            this.val.xDelta = 0;
-            this.val.movingDown = true;
+            this.data.val.movingRight = !this.data.val.movingRight;
+            this.data.val.xDelta = 0;
+            this.data.val.movingDown = true;
         }
 
-        for ( var i = this.data.length - 1; i >= 0; i-- )
-            this._adjustEnemy( this.data[i], ctx, i, this.data, this.val.shiftV );        
+        for ( var i = this.data.enemies.length - 1; i >= 0; i-- )
+            this._adjustEnemy( this.data.enemies[i], ctx, i, this.data.enemies, this.data.val.shiftV );
     }
 };
 
@@ -181,15 +162,15 @@ Enemy.draw = function( ctx )
 |   ...movement and state adjustments for each frame
 |
 */
-Enemy._adjustEnemy = function( enemy, ctx, i, data, shiftV )
+Enemy._adjustEnemy = function( enemy, ctx, i, enemies, shiftV )
 {
     //
     // movement
     //
-    if ( this.val.movingDown )
+    if ( this.data.val.movingDown )
         enemy.y = enemy.y + shiftV;
 
-    else if ( this.val.movingRight )
+    else if ( this.data.val.movingRight )
         enemy.x = enemy.x + shiftV;
 
     else
@@ -202,10 +183,10 @@ Enemy._adjustEnemy = function( enemy, ctx, i, data, shiftV )
         this._drawEnemy( enemy, ctx );
 
     else if ( enemy.state == 'dead' )
-        this._deactivate( i, data );
+        this._deactivate( i, enemies );
 
     else
-        this._deactivate( i, data );
+        this._deactivate( i, enemies );
 };
 
 /*
@@ -232,9 +213,9 @@ Enemy._drawEnemy = function( enemy, ctx )
 |       to live out it's final days frolicing in the country side.
 |
 */
-Enemy._deactivate = function( i, data )
+Enemy._deactivate = function( i, enemies )
 {
-    data.splice( i, 1 );
+    enemies.splice( i, 1 );
 };
 
 /*
