@@ -3,8 +3,58 @@
 <head>
     <title>shooty shoot</title>
     <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="css.css">
 </head>
 <body>
-    
+
+<!--
+    shooty shoot
+-->
+<div id="shooty-shoot" class="pane">
+    <div id="score">
+        <div>
+            shots:
+            <strong class="shots">0</strong>
+        </div>
+        <div>
+            hits:
+            <strong class="hits">0</strong>
+        </div>
+        <div>
+            accuracy:
+            <strong class="accuracy">0</strong>%
+        </div>
+    </div>
+
+    <canvas id="shooty-shoot-canvas"></canvas>
+</div>
+
+<!--
+    home
+-->
+<div id="home" class="pane">
+    <p>shooty shoot</p>
+    <button class="play-btn">play</button>
+</div>
+
+<!--
+    lose
+-->
+<div id="lose" class="pane">
+    <p>you lose</p>
+    <button class="play-btn">reload</button>
+</div>
+
+<!--
+    win
+-->
+<div id="win" class="pane">
+    <p>you win</p>
+    <button class="play-btn">reload</button>
+</div>
+
+<script src="js.js"></script>
+
 </body>
 </html>
