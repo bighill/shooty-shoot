@@ -1,5 +1,13 @@
 (function(){ 'use strict';
 
+/*
+|
+|   global
+|
+|   ...main object for controlling the game
+|
+*/
+
 var G = {
 
     //
@@ -34,6 +42,11 @@ var G = {
     },
 };
 
+/*
+|
+|   init
+|
+*/
 G.init = function()
 {
     //
@@ -50,13 +63,26 @@ G.init = function()
     //
     //  set enemy defaults
     //
+    setTimeout( Enemy.init, 0 );
 };
 
+/*
+|
+|   set z
+|
+*/
 G.setZ = function()
 {
     G.z = G.el.canvas.offsetWidth;
 };
 
+/*
+|
+|   draw canvas
+|
+|   ...the primary controller for drawing to canvas
+|
+*/
 G.drawCanvas = function()
 {
     var ctx = G.el.canvas.getContext( '2d' );
@@ -74,7 +100,7 @@ G.drawCanvas = function()
     //
     //  draw the elements
     //
-    // Enemy.draw( ctx );
+    Enemy.draw( ctx );
     Shooter.draw( ctx );
     Shot.draw( ctx );
 
@@ -85,6 +111,13 @@ G.drawCanvas = function()
         window.requestAnimationFrame( G.drawCanvas );
 };
 
+/*
+|
+|   play
+|
+|   ...do all the things needed to start the game
+|
+*/
 G.play = function()
 {
     G.init();
@@ -92,6 +125,28 @@ G.play = function()
     window.requestAnimationFrame( G.drawCanvas );
     State.set( 'shooty-shoot' );
     Score.init();
+};
+
+/*
+|
+|   win
+|
+|   ...do all the things needed the game has been won
+|
+*/
+G.win = function()
+{
+};
+
+/*
+|
+|   lose
+|
+|   ...do all the things needed the game has been lost
+|
+*/
+G.lose = function()
+{
 };
 
 window.G = G;
