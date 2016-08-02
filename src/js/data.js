@@ -13,12 +13,12 @@ var Data = {
         //
         //  number of rows
         //
-        rowN : 1,
+        rowN : 5,
 
         //
         //  number of enemies in each row
         //
-        colN : 3,
+        colN : 10,
 
         //
         //  enemy movement speed multiplier

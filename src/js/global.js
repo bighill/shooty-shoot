@@ -13,7 +13,7 @@ var G = {
     //
     //  global game speed
     //
-    speed : 1.3,
+    speed : 0.3,
 
     // 
     // values
@@ -135,9 +135,7 @@ G.drawCanvas = function()
 */
 G.play = function()
 {
-    G.init();
-    // window.requestAnimationFrame( G.drawCanvas );
-    // Score.init();    
+    G.init();   
 };
 
 /*
