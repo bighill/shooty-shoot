@@ -33,6 +33,9 @@ var G = {
         home    : document.getElementById( 'home' ),
         lose    : document.getElementById( 'lose' ),
         win     : document.getElementById( 'win' ),
+
+        homeH1      : document.querySelector( '#home h1' ),
+        homePlayBtn : document.getElementById( 'home-play-btn' ),
     },
     els : {
         playBtns : document.getElementsByClassName( 'play-btn'),

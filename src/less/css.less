@@ -28,6 +28,14 @@ code {
     padding     : .3em;
 }
 
+.home-h1-highlight {
+    color       : @color-highlight;
+    animation   : blinker 3s linear infinite;
+}
+@keyframes blinker {
+    50% { color : tomato; }
+}
+
 .highlight {
     background  : @color-highlight;
     color       : @color-bg;

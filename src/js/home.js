@@ -17,6 +17,8 @@ var Home = {
     {
         window.addEventListener( 'keydown', Home.keyDown );
         window.addEventListener( 'keyup', Home.keyUp );
+        G.el.homePlayBtn.addEventListener( 'mouseover', Home.playHover );
+        G.el.homePlayBtn.addEventListener( 'mouseout', Home.playUnHover );
     },
 
     //
@@ -26,6 +28,8 @@ var Home = {
     {
         window.removeEventListener( 'keydown', Home.keyDown );
         window.removeEventListener( 'keyup', Home.keyUp );
+        G.el.homePlayBtn.removeEventListener( 'mouseover', Home.playHover );
+        G.el.homePlayBtn.removeEventListener( 'mouseout', Home.playUnHover );
     },
 };
 
@@ -102,6 +106,26 @@ Home.keyInstructions = function( action, els )
             el.classList.remove( 'highlight' );
         });
     }
+};
+
+/*
+|
+|
+|
+*/
+Home.playHover = function()
+{
+    G.el.homeH1.classList.add( 'home-h1-highlight' );
+};
+
+/*
+|
+|
+|
+*/
+Home.playUnHover = function()
+{
+    G.el.homeH1.classList.remove( 'home-h1-highlight' );
 };
 
 /*
