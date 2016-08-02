@@ -11,11 +11,15 @@
 var Score = {
 
     /*
-    data.initEnemies : 0,
-    data.enemies     : 0,
-    data.shots       : 0,
-    data.hits        : 0,
-    data.accuracy    : 0,
+    this data set by init()
+
+    data to expect...
+
+    initEnemies (int)
+    enemies     (int)
+    shots       (int)
+    hits        (int)
+    accuracy    (int)
     */
     data : {},
 };

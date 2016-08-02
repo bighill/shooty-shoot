@@ -15,7 +15,12 @@ var init = function()
     //
     //  button listeners
     //
-    playBtnListeners( G.els.playBtns );
+    _playBtnListeners( G.els.playBtns );
+
+    //
+    //  keys instructions listeners for home pane
+    //
+    Home.addListeners();
 
     //
     //  display home pane
@@ -34,10 +39,12 @@ var init = function()
 |   listeners for buttons outside of the game
 |
 */
-var playBtnListeners = function( btns )
+var _playBtnListeners = function( btns )
 {
-    for ( var i = btns.length - 1; i >= 0; i-- )
-        btns[i].addEventListener( 'click', G.play );
+    _(btns).forEach(function( btn )
+    {
+        btn.addEventListener( 'click', G.play );
+    });
 };
 
 /*

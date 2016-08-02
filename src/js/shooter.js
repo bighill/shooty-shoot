@@ -54,8 +54,8 @@ Shooter.init = function()
     self.x = ( G.z / 2 );
     self.y = G.z - self.r - 1;
 
-    window.addEventListener( 'keydown', self.keyPress );
-    window.addEventListener( 'keyup', self.keyRelease );
+    window.addEventListener( 'keydown', self.keyDown );
+    window.addEventListener( 'keyup', self.keyUp );
 };
 
 /*
@@ -100,7 +100,7 @@ Shooter.draw = function( ctx )
 |   key press
 |
 */
-Shooter.keyPress = function( ev )
+Shooter.keyDown = function( ev )
 {
     //
     //  left key
@@ -126,7 +126,7 @@ Shooter.keyPress = function( ev )
 |   key release
 |
 */
-Shooter.keyRelease = function( ev )
+Shooter.keyUp = function( ev )
 {
     //
     //  left key

@@ -13,7 +13,7 @@ var G = {
     //
     //  global game speed
     //
-    speed : 0.3,
+    speed : 1.3,
 
     // 
     // values
@@ -38,7 +38,10 @@ var G = {
         playBtns : document.getElementsByClassName( 'play-btn'),
         shots    : document.getElementsByClassName( 'shots' ),
         hits     : document.getElementsByClassName( 'hits' ),
-        accuracy : document.getElementsByClassName( 'accuracy' ), 
+        accuracy : document.getElementsByClassName( 'accuracy' ),
+        keyLeft  : document.getElementsByClassName( 'key-left' ),
+        keyRight : document.getElementsByClassName( 'key-right' ),
+        keyShoot : document.getElementsByClassName( 'key-shoot' ),
     },
 };
 
@@ -67,6 +70,7 @@ G.init = function()
     //  things to do after the State.set() promise
     //
     p.then( G.setZ )
+        .then( Home.removeListeners )
         .then( Enemy.init )
         .then( Shooter.init )
         .then( Shot.init )
