@@ -13,7 +13,7 @@ var G = {
     //
     //  global game speed
     //
-    speed : 1.3,
+    speed : 0.3,
 
     // 
     // values
