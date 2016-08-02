@@ -61,6 +61,14 @@ var Data = {
     },
 
     shot : [],
+
+    score : {
+        initEnemies : 0,
+        enemies     : 0,
+        shots       : 0,
+        hits        : 0,
+        accuracy    : 0,
+    },
 };
 
 /*

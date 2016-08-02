@@ -10,11 +10,14 @@
 
 var Score = {
 
-    initEnemies : 0,
-    enemies     : 0,
-    shots       : 0,
-    hits        : 0,
-    accuracy    : 0,
+    /*
+    data.initEnemies : 0,
+    data.enemies     : 0,
+    data.shots       : 0,
+    data.hits        : 0,
+    data.accuracy    : 0,
+    */
+    data : {},
 };
 
 /*
@@ -24,6 +27,7 @@ var Score = {
 */
 Score.init = function()
 {
+    Score.data = _.cloneDeep( Data.score );
     Score.draw();
 };
 
@@ -36,9 +40,9 @@ Score.init = function()
 */
 Score.draw = function()
 {
-    this._setElText( G.els.shots, this.shots );
-    this._setElText( G.els.hits, this.hits );
-    this._setElText( G.els.accuracy, this.setGetAccuracy() );
+    Score._setElText( G.els.shots, Score.data.shots );
+    Score._setElText( G.els.hits, Score.data.hits );
+    Score._setElText( G.els.accuracy, Score.setGetAccuracy() );
 
     window.setTimeout( function() { Score.draw(); }, 500);
 };
@@ -50,10 +54,10 @@ Score.draw = function()
 */
 Score.setEnemies = function( n )
 {
-    this.initEnemies = n;
-    this.enemies     = n;
+    this.data.initEnemies = n;
+    this.data.enemies     = n;
 
-    return this.enemies;
+    return this.data.enemies;
 };
 
 /*
@@ -65,8 +69,8 @@ Score.setEnemies = function( n )
 */
 Score.shot = function()
 {
-    this.shots++;
-    return this.shots;
+    this.data.shots++;
+    return this.data.shots;
 };
 
 /*
@@ -78,10 +82,10 @@ Score.shot = function()
 */
 Score.hit = function()
 {
-    this.hits++;
-    this.enemies--;
+    this.data.hits++;
+    this.data.enemies--;
 
-    return this.hits;
+    return this.data.hits;
 };
 
 /*
@@ -96,15 +100,15 @@ Score.setGetAccuracy = function()
     //
     //  avoid zero divided by zero
     //
-    if ( !this.shots )
-        return this.accuracy;
+    if ( !this.data.shots )
+        return this.data.accuracy;
 
     //
     //  ok, do the thing
     //
-    this.accuracy = this._calcPercentage( this.hits, this.shots );
+    this.data.accuracy = this._calcPercentage( this.data.hits, this.data.shots );
 
-    return this.accuracy;
+    return this.data.accuracy;
 };
 
 /*
