@@ -11,6 +11,8 @@ _coming soon_
 ## potential future improvements
 
 * bundle all assets into one file
+* use more _functional programming_ techniques
+* make better of lodash for greater overall elegance
 * api to track high scores
 * user logins
 * user customizable shooter and enemy characters/images/pics
