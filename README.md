@@ -6,11 +6,11 @@ a simple web game where a shooter shoots shots at enemies.
 
 ## demo
 
-_coming soon_
+[shooty-shoot](https://mondaymachine.com/shooty-shoot/)
 
 ## why?
 
-the world certainly does not need another stupid game like this.  it's just a personal project to help me learn more about this kind of stuff:
+it's just a personal project to help me learn more about this kind of stuff:
 * html5
 * css3
 * flexbox
