@@ -1,140 +1,82 @@
 (function(){ 'use strict';
 
-/*
-|
-|   shot
-|
-|   ...our shots/projectiles that will hurled at enemies
-|
-*/
-
-var Shot = {
-    data : [],
+var Shot = function()
+{
+    this.data  = [];
+    this.accel = null;
 };
 
-/*
-|
-|   init
-|
-*/
-Shot.init = function()
+Shot.prototype.init = function( z )
 {
-    Shot.data = _.cloneDeep( Data.shot );
+    this.accel = z * 0.01;
 };
 
-/*
-|
-|   launch
-|
-|   ...initialize a shot
-|
-*/
-Shot.launch = function( x, y )
+Shot.prototype.launch = function( d )
 {
-    var shot = {
-        x : x,
-        y : y,
-        state : 'active',
+    var s = {
+        x       : d.x,
+        y       : d.y - d.r,
+        state   : 'active',
+        accel   : this.accel,
     };
 
-    this.data.push( shot );
-
-    //
-    //  notifiy score board
-    //
-    Score.shot();
+    this.data.push( s );
 };
 
-/*
-|
-|   draw
-|
-|   ...draw current shots
-|
-*/
-Shot.draw = function( ctx )
+Shot.prototype.animate = function()
+{
+    this.movement();
+    this.processState();
+};
+
+Shot.prototype.movement = function()
+{
+    if ( !this.data[0] )
+        return false;
+
+    this.data = this.data.map( _move );
+    this.data = this.data.map( _isMiss );
+};
+
+var _move = function( i )
+{
+    i.y = i.y - i.accel;
+
+    return i;
+};
+
+var _isMiss = function( i )
+{
+    if ( i.y < 0 )
+        i.state = 'miss';
+
+    return i;
+};
+
+Shot.prototype.processState = function()
 {
     if ( !this.data[0] )
         return false;
 
     for ( var i = this.data.length - 1; i >= 0; i-- )
-        _drawEach( this.data[i], i, this.data, ctx );
+        processStateEach( this.data[i], this.data );
 };
 
-/*
-|
-|   draw each
-|
-|   ...analyze current state of each shot and draw appropriately
-|
-*/
-var _drawEach = function( shot, i, data, ctx )
+var processStateEach = function( i, data )
 {
-    shot.y     = shot.y - ( G.z * 0.01 );
-    shot.state = _isMiss( shot );
-
-    if ( shot.state == 'active' )
-        _drawShot( ctx, shot );
-
-    else if ( shot.state == 'miss' )
-        _deactivate( i, data );
-
-    else if ( shot.state == 'hit' )
-        _deactivate( i, data );
-
-    else
-        _deactivate( i, data );
+    if (
+        i.state == 'miss' ||
+        i.state == 'hit'
+    )
+        data.splice( i, 1 );
 };
 
-/*
-|
-|   is miss
-|
-|   ...look for misses
-|
-*/
-var _isMiss = function( shot )
+Shot.prototype.hit = function( i )
 {
-    if ( shot.y < 0 )
-        return 'miss';
-
-    return shot.state;
+    this.data[i].state = 'hit';
 };
 
-/*
-|
-|   draw shot
-|
-|   ...draw shot on the canvas
-|
-*/
-var _drawShot = function( ctx, shot )
-{
-    ctx.beginPath();
-    ctx.fillStyle = 'white';
-    ctx.rect( shot.x, shot.y, 5, 5 );
-    ctx.fill();
-};
-
-/*
-|
-|   deactivate
-|
-|   ...shot goes away when either hits or misses enemies
-|
-*/
-var _deactivate = function( i, data )
-{
-    data.splice( i, 1 );
-};
-
-/*
-|
-|   a gift for window
-|
-*/
 window.Shot = Shot;
-
 })();
 
 // EOF

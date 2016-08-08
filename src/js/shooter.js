@@ -4,225 +4,102 @@
 |
 |   shooter
 |
-|   ...brrap brrap pew pew
-|
 */
 
-var Shooter = {
+var Shooter = function()
+{
+    //
+    //  data for the view
+    //
+    this.v = {
+
+        x : null,
+        y : null,
+        r : null,
+
+        defaultOpacity  : 0.5,
+        shootOpacity    : 0.7,
+        currentOpacity  : null,
+    };
 
     //
     // multipliers
     //
-    wMultp      : 0.05,
-    moveMultp   : 0.01,
-
-    //
-    //  values set by this.init()
-    //
-    x : 0,
-    y : 0,
-    r : 0,
-
-    //
-    //  opacity
-    //
-    defaultOpacity  : 0.5,
-    shootOpacity    : 0.7,
-    currentOpacity  : 0.5,
+    this.wMultp      = 0.05;
+    this.moveMultp   = 0.01;
 
     //
     // actions
     //
-    moveLeft    : false,
-    moveRight   : false,
-    shooting    : false,
-    delayShot   : false,
+    this.isMovingLeft    = false;
+    this.isMovingRight   = false;
+    this.isShooting    = false;
+    this.delayShot   = false;
 };
 
-/*
-|
-|   init
-|
-|   ...set values and add listeners
-|
-*/
-Shooter.init = function()
+Shooter.prototype.init = function( z )
 {
-    var self = Shooter;
+    this.v.r = z * this.wMultp;
+    this.v.x = ( z / 2 );
+    this.v.y = z - this.v.r - 1;
 
-    self.r = G.z * self.wMultp;
-    self.x = ( G.z / 2 );
-    self.y = G.z - self.r - 1;
-
-    window.addEventListener( 'keydown', self.keyDown );
-    window.addEventListener( 'keyup', self.keyUp );
+    this.v.currentOpacity = this.v.defaultOpacity;
 };
 
-/*
-|
-|   draw
-|
-|   ...analyze the state of things, adjust as needed, then draw
-|
-*/
-Shooter.draw = function( ctx )
+Shooter.prototype.animate = function( z )
 {
-    //
-    //  prepare to draw
-    //
-    ctx.beginPath();
-    ctx.fillStyle = 'rgba( 126, 192, 238, '+this.currentOpacity+' )';
+    var stall = this.isLeftRightStall();
 
-    //
-    //  analyze actions
-    //
-    if ( this.moveLeft )
-        this.left();
+    if ( this.isMovingLeft && !stall )
+        this.moveLeft( z );
 
-    if ( this.moveRight )
-        this.right();
+    if ( this.isMovingRight && !stall )
+        this.moveRight( z );
 
-    if ( this.shooting )
-        this.shoot( ctx );
-
-    if ( this.currentOpacity > this.defaultOpacity )
-        this.currentOpacity = this.currentOpacity - 0.01;
-
-    //
-    //  draw
-    //
-    ctx.arc( this.x, this.y, this.r, 0, 2 * Math.PI );
-    ctx.fill();
+    this.fadingOpacity();
 };
 
-/*
-|
-|   key press
-|
-*/
-Shooter.keyDown = function( ev )
+Shooter.prototype.moveLeft = function( z )
 {
-    //
-    //  left key
-    //
-    if ( ev.keyCode == 37 )
-        Shooter.moveLeft = true;
+    var x0  = this.v.x,
+        r   = this.v.r,
+        m   = this.moveMultp,
+        x1  = x0 - ( z * m );
 
-    //
-    // right key
-    //
-    if ( ev.keyCode == 39 )
-        Shooter.moveRight = true;
-
-    //
-    // ctrl & space keys
-    //
-    if ( ev.keyCode == 17 || ev.keyCode == 32 )
-        Shooter.shooting = true;
+    if ( x1 - r >= 1 )
+        this.v.x = x1;
 };
 
-/*
-|
-|   key release
-|
-*/
-Shooter.keyUp = function( ev )
+Shooter.prototype.moveRight = function( z )
 {
-    //
-    //  left key
-    //
-    if ( ev.keyCode == 37 )
-        Shooter.moveLeft = false;
+    var x0  = this.v.x,
+        r   = this.v.r,
+        m   = this.moveMultp,
+        x1  = x0 + ( z * m );
 
-    //
-    // right key
-    //
-    if ( ev.keyCode == 39 )
-        Shooter.moveRight = false;
-
-    //
-    // ctrl & space keys
-    //
-    if ( ev.keyCode == 17 || ev.keyCode == 32 )
-        Shooter.shooting = false;
+    if ( x1 + r <= z - 1 )
+        this.v.x = x1;
 };
 
-/*
-|
-|   left
-|
-|   ...move shooter
-|
-*/
-Shooter.left = function()
+Shooter.prototype.isLeftRightStall = function()
 {
-    var newX = this.x - ( G.z * this.moveMultp );
-
-    if ( newX - this.r >= 1 )
-        this.x = newX ;
+    return this.isMovingLeft && this.isMovingRight;
 };
 
-/*
-|
-|   right
-|
-|   ...move shooter
-|
-*/
-Shooter.right = function()
+Shooter.prototype.setShotOpacity = function()
 {
-    var newX = this.x + ( G.z * this.moveMultp );
-
-    if ( newX + this.r <= G.z - 1 )
-        this.x = newX;
+    this.v.currentOpacity = this.v.shootOpacity;
 };
 
-/*
-|
-|   shoot
-|
-*/
-Shooter.shoot = function( ctx )
+Shooter.prototype.fadingOpacity = function()
 {
-    if ( this.delayShot )
-        return false;
-
-    this.engageDelay();
-
-    this.currentOpacity = this.shootOpacity;
-    Shot.launch( this.x, this.y - this.r );
+    if ( this.v.currentOpacity > this.v.defaultOpacity )
+        this.v.currentOpacity = this.v.currentOpacity - 0.01;
 };
 
-/*
-|
-|   engage delay
-|
-|   ...delay shots a bit, no need to shoot on every frame
-|
-*/
-Shooter.engageDelay = function()
-{
-    this.delayShot = true;
-    window.setTimeout( this.releaseDelay, 300);
-};
 
-/*
-|
-|   release delay
-|
-*/
-Shooter.releaseDelay = function()
-{        
-    Shooter.delayShot = false;
-};
 
-/*
-|
-|   a gift for window
-|
-*/
 window.Shooter = Shooter;
-
 })();
 
 // EOF

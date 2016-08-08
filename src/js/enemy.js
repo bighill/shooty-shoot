@@ -4,227 +4,239 @@
 |
 |   enemy
 |
-|   ...boooo
-|
 */
 
-var Enemy = {
+var Enemy = function()
+{
+    this.data = {
 
-    /*
-    this data set by init()
+        //
+        //  number of rows
+        //
+        rowN : 5,
 
-    data to expect...
+        //
+        //  number of enemies in each row
+        //
+        colN : 10,
 
-    rowN (int)
-    colN (int)
-    moveMultp (float)
-    rowWmultp (float)
-    shiftWmultp (float)
-    enemies (array)
+        //
+        //  enemy movement speed multiplier
+        //
+        moveMultp : 0.008,
 
-    val (obj)
-        rowW (float)
-        shiftW (float)
-        shiftH (float)
-        enemyR (float)
-        shiftV (float)
-        xDelta (float)
-        yDelta (float)
-        movingRight (bool)
-        movingDown (bool)
-    */
-    data : {},
+        //
+        //  row width multiplier and shift width multiplier should add up to 1
+        //
+        rowWmultp   : 0.7,
+        shiftWmultp : 0.3,
+
+        //
+        //  data for state of each enemy
+        //
+        enemies : [],
+
+        //
+        //  values set by init()
+        //
+        rowW    : 0,
+        shiftW  : 0,
+        shiftH  : 0,
+        enemyR  : 0,
+        shiftV  : 0,
+
+        //
+        //  track enemy shift direction
+        //
+        xDelta      : 0,
+        yDelta      : 0,
+        movingRight : true,
+        movingDown  : false,
+    };
 };
 
-/*
-|
-|   init
-|
-*/
-Enemy.init = function()
+Enemy.prototype.init = function( z, v )
 {
-    var self = Enemy;
-
-    //
-    //  load data from data model
-    //
-    self.data = _.cloneDeep( Data.enemy );
-
     //
     //  set global enemy values
     //
-    self.data.val.rowW   = G.z * self.data.rowWmultp;
-    self.data.val.shiftW = G.z * self.data.shiftWmultp;
-    self.data.val.shiftV = self.data.moveMultp * G.z * G.speed;
+    this.data.rowW   = z * this.data.rowWmultp;
+    this.data.shiftW = z * this.data.shiftWmultp;
+    this.data.shiftV = this.data.moveMultp * z * v;
     
-    var enemiesAndGapsN = ( self.data.colN * 2 ) - 1;  
-    self.data.val.enemyR = ( self.data.val.rowW / enemiesAndGapsN ) / 2;
+    var enemiesAndGapsN = ( this.data.colN * 2 ) - 1;  
+    this.data.enemyR    = ( this.data.rowW / enemiesAndGapsN ) / 2;
 
-    self.data.val.shiftH = self.data.val.enemyR;
+    this.data.shiftH = this.data.enemyR;
 
     //
-    //  default values for each enemy
+    //  initial values for enemy
     //
-    var x = self.data.val.enemyR,
-        y = self.data.val.enemyR,
-        r = self.data.val.enemyR,
+    var x = this.data.enemyR,
+        y = this.data.enemyR,
+        r = this.data.enemyR,
         defaultX = x,
         defaultY = y;
 
     //
     //  initialize each enemy
     //
-    for ( var n = self.data.rowN - 1; n >= 0; n-- )
+    for ( var n = this.data.rowN - 1; n >= 0; n-- )
     {
-        for ( var i = self.data.colN - 1; i >= 0; i-- )
+        for ( var i = this.data.colN - 1; i >= 0; i-- )
         {
-            self.setRow( x, y, r );        
+            this.initEachEnemy( x, y, r );        
             x = x + ( r * 4 );
         }
 
         x = defaultX;
         y = defaultY + ( r * 4 * n );
     }
-
-    //
-    //  notify scoreboard, total # of enemies
-    //
-    Score.setEnemies( self.data.rowN * self.data.colN );
 };
 
-/*
-|
-|   set row
-|
-|   ...initialize data for row of enemies
-|
-*/
-Enemy.setRow = function( x, y, r )
+Enemy.prototype.initEachEnemy = function( x, y, r )
 {
     var enemy = {
             x : x,
             y : y,
             r : r,
             state : 'active',
+            shift : this.data.shiftV,
         };
 
     this.data.enemies.push( enemy );
 };
 
-/*
-|
-|   draw
-|
-|   ...start drawing all enemies
-|
-*/
-Enemy.draw = function( ctx )
+Enemy.prototype.animate = function()
+{
+    this.movement();
+    this.processState();
+};
+
+Enemy.prototype.movement = function()
 {
     if ( !this.data.enemies[0] )
-    {
-        G.win();
         return false;
-    }
 
-    if ( this.data.val.movingDown )
-    {
-        this.data.val.yDelta = this.data.val.yDelta + this.data.val.shiftV;
-
-        if ( this.data.val.yDelta >= this.data.val.shiftH )
-        {
-            this.data.val.movingDown = false;
-            this.data.val.yDelta = 0;
-        }
-
-        for ( var iDwn = this.data.enemies.length - 1; iDwn >= 0; iDwn-- )
-            this._adjustEnemy( this.data.enemies[iDwn], ctx, iDwn, this.data.enemies, this.data.val.shiftV ); 
-    }
-    else
-    {
-        this.data.val.xDelta = this.data.val.xDelta + this.data.val.shiftV;
-
-        if ( this.data.val.xDelta >= this.data.val.shiftW )
-        {
-            this.data.val.movingRight = !this.data.val.movingRight;
-            this.data.val.xDelta = 0;
-            this.data.val.movingDown = true;
-        }
-
-        for ( var i = this.data.enemies.length - 1; i >= 0; i-- )
-            this._adjustEnemy( this.data.enemies[i], ctx, i, this.data.enemies, this.data.val.shiftV );
-    }
+    this.data = ( this.data.movingDown ) ?
+        _moveEnemiesDown( this.data )    :
+        _moveEnemiesHorizontally( this.data );
 };
 
-/*
-|
-|   adjust enemy
-|
-|   ...movement and state adjustments for each frame
-|
-*/
-Enemy._adjustEnemy = function( enemy, ctx, i, enemies, shiftV )
+var _moveEnemiesDown = function( d )
 {
     //
-    // movement
+    //  increment downward movement with yDelta
     //
-    if ( this.data.val.movingDown )
-        enemy.y = enemy.y + shiftV;
-
-    else if ( this.data.val.movingRight )
-        enemy.x = enemy.x + shiftV;
-
-    else
-        enemy.x = enemy.x - shiftV;
+    d = _incrementDownwardMovement( d );
 
     //
-    //  state
+    //  check if done moving down
     //
-    if ( enemy.state == 'active' )
-        this._drawEnemy( enemy, ctx );
+    if ( d.yDelta >= d.shiftH )
+        d = _movingDownIsComplete( d );
 
-    else if ( enemy.state == 'dead' )
-        this._deactivate( i, enemies );
+    //
+    //  adjust enemy postitions
+    //
+    d.enemies = d.enemies.map( _moveEnemyDown );
 
-    else
-        this._deactivate( i, enemies );
+    return d;
 };
 
-/*
-|
-|   draw enemy
-|
-|   ...draw enemy on the canvas
-|
-*/
-Enemy._drawEnemy = function( enemy, ctx )
+var _moveEnemiesHorizontally = function( d )
 {
-    ctx.beginPath();
-    ctx.fillStyle = 'rgba( 255, 99, 71, 0.5 )';
-    ctx.arc( enemy.x, enemy.y, enemy.r, 0, 2 * Math.PI );
-    ctx.fill();
+    //
+    //  increment downward movement with xDelta
+    //
+    d = _incrementHorizontalMovement( d );
+
+    //
+    //  check if done moving horizontally
+    //
+    if ( d.xDelta >= d.shiftW )
+        d = _movingHorizontallyIsComplete( d );
+
+    //
+    //  adjust enemy postitions
+    //
+    d.enemies = ( d.movingRight )        ?
+        d.enemies.map( _moveEnemyRight ) :
+        d.enemies.map( _moveEnemyLeft );
+
+    return d;
 };
 
-/*
-|
-|   deactivate
-|
-|   ...when hit,
-|       an enemy must be sent to a farm upstate
-|       to live out it's final days frolicing in the country side.
-|
-*/
-Enemy._deactivate = function( i, enemies )
+var _incrementDownwardMovement = function( d )
 {
-    enemies.splice( i, 1 );
+    d.yDelta = d.yDelta + d.shiftV;
+
+    return d;
 };
 
-/*
-|
-|   a gift for window
-|
-*/
+var _movingDownIsComplete = function( d )
+{
+    d.movingDown    = false;
+    d.yDelta        = 0;
+
+    return d;
+};
+
+var _moveEnemyDown = function( enemy )
+{
+    enemy.y = enemy.y + enemy.shift;
+
+    return enemy;
+};
+
+var _incrementHorizontalMovement = function( d )
+{
+    d.xDelta = d.xDelta + d.shiftV;
+
+    return d;
+};
+
+var _movingHorizontallyIsComplete = function( d )
+{
+    d.movingRight   = !d.movingRight;
+    d.xDelta        = 0;
+    d.movingDown    = true;
+
+    return d;
+};
+
+var _moveEnemyRight = function( enemy )
+{
+    enemy.x = enemy.x + enemy.shift;
+
+    return enemy;
+};
+
+var _moveEnemyLeft = function( enemy )
+{
+    enemy.x = enemy.x - enemy.shift;
+
+    return enemy;
+};
+
+Enemy.prototype.processState = function()
+{
+    for ( var i = this.data.enemies.length - 1; i >= 0; i-- )
+        _processEach( this.data.enemies[i], i, this.data.enemies );
+};
+
+var _processEach = function( enemy, enemyI, enemies )
+{
+    if ( enemy.state == 'hit' )
+        enemies.splice( enemyI, 1 );
+};
+
+Enemy.prototype.hit = function( i )
+{
+    this.data.enemies[i].state = 'hit';
+};
+
 window.Enemy = Enemy;
-
 })();
 
 // EOF

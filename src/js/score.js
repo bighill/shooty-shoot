@@ -8,31 +8,17 @@
 |
 */
 
-var Score = {
-
-    /*
-    this data set by init()
-
-    data to expect...
-
-    initEnemies (int)
-    enemies     (int)
-    shots       (int)
-    hits        (int)
-    accuracy    (int)
-    */
-    data : {},
-};
-
-/*
-|
-|   init
-|
-*/
-Score.init = function()
+var Score = function( enemies, els )
 {
-    Score.data = _.cloneDeep( Data.score );
-    Score.draw();
+    this.data = {
+        initEnemies : enemies,
+        enemies     : enemies,
+        shots       : 0,
+        hits        : 0,
+        accuracy    : 0,
+    };
+
+    this.els = els;
 };
 
 /*
@@ -42,26 +28,11 @@ Score.init = function()
 |   ...display score stats in scoreboard
 |
 */
-Score.draw = function()
+Score.prototype.draw = function()
 {
-    Score._setElText( G.els.shots, Score.data.shots );
-    Score._setElText( G.els.hits, Score.data.hits );
-    Score._setElText( G.els.accuracy, Score.setGetAccuracy() );
-
-    window.setTimeout( function() { Score.draw(); }, 500);
-};
-
-/*
-|
-|   set enemies
-|
-*/
-Score.setEnemies = function( n )
-{
-    this.data.initEnemies = n;
-    this.data.enemies     = n;
-
-    return this.data.enemies;
+    _setElText( this.els.shots, this.data.shots );
+    _setElText( this.els.hits, this.data.hits );
+    _setElText( this.els.accuracy, this.setGetAccuracy() );
 };
 
 /*
@@ -71,7 +42,7 @@ Score.setEnemies = function( n )
 |   ...record a new shot
 |
 */
-Score.shot = function()
+Score.prototype.shot = function()
 {
     this.data.shots++;
     return this.data.shots;
@@ -84,7 +55,7 @@ Score.shot = function()
 |   ...record a new hit
 |
 */
-Score.hit = function()
+Score.prototype.hit = function()
 {
     this.data.hits++;
     this.data.enemies--;
@@ -99,18 +70,18 @@ Score.hit = function()
 |   ...determine current accuracy and return that
 |
 */
-Score.setGetAccuracy = function()
+Score.prototype.setGetAccuracy = function()
 {
     //
-    //  avoid zero divided by zero
+    //
     //
     if ( !this.data.shots )
         return this.data.accuracy;
 
     //
-    //  ok, do the thing
     //
-    this.data.accuracy = this._calcPercentage( this.data.hits, this.data.shots );
+    //
+    this.data.accuracy = _calcPercentage( this.data.hits, this.data.shots );
 
     return this.data.accuracy;
 };
@@ -120,7 +91,7 @@ Score.setGetAccuracy = function()
 |   calculate percentage
 |
 */
-Score._calcPercentage = function( actual, possible )
+var _calcPercentage = function( actual, possible )
 {
     var p = actual / possible;
 
@@ -137,7 +108,7 @@ Score._calcPercentage = function( actual, possible )
 |   ...apply to scoreboard dom elements
 |
 */
-Score._setElText = function( els, txt )
+var _setElText = function( els, txt )
 {
     for ( var i = els.length - 1; i >= 0; i-- )
         els[i].textContent = txt;
@@ -147,7 +118,7 @@ Score._setElText = function( els, txt )
 
 /*
 |
-|   a gift for window
+|
 |
 */
 window.Score = Score;

@@ -39,7 +39,8 @@ var State = {
 
 State.set = function( s )
 {
-    for (var i = this.available.length - 1; i >= 0; i--) {
+    for ( var i = this.available.length - 1; i >= 0; i-- )
+    {
         if ( this.available[i].id == s )
             this.apply( this.available[i] );
     }
@@ -59,14 +60,10 @@ State.apply = function( s )
 
 State.clear = function()
 {
-    U.loop(
-        this.available,
-        function( a )
-        {
-            var el = document.getElementById( a.id );
-
-            el.style.display = 'none';
-        });
+    for ( var i = this.available.length - 1; i >= 0; i-- )
+        document
+            .getElementById( this.available[i].id )
+            .style.display = 'none';
 };
 
 window.State = State;

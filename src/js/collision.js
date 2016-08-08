@@ -2,51 +2,101 @@
 
 /*
 |
-|   collision
-|
-|   ...determine if enemy collided with either a shot or the shooter
+|   collisions
 |
 */
 
-var Collision = {};
-
-Collision.check = function()
+var Lose = function( enemies, shooter )
 {
-    if ( !Enemy.data.enemies.length )
-        return false;
+    //
+    //  check for enemy collision with shooter
+    //
+    if ( _shooterCollision(enemies, shooter) )
+        return true;
 
-    for ( var i = Enemy.data.enemies.length - 1; i >= 0; i-- )
-    {
-        //
-        //  player loses if enemyBottom reaches shooterTop
-        //
-        var enemyBottom = Enemy.data.enemies[i].y + Enemy.data.enemies[i].r,
-            shooterTop  = Shooter.y - Shooter.r;
-
-        this._shooterCollision( enemyBottom, shooterTop );
-
-        //
-        //  just stop here if no currently active shots
-        //
-        if ( !Shot.data.length )
-            continue;
-
-        //
-        //  check for hits ...enemy and shot collisions
-        //
-        for ( var j = Shot.data.length - 1; j >= 0; j-- )
-            this._shotCollision( Shot.data[j], j, Enemy.data.enemies[i], i );
-    }
+    return false;
 };
 
 /*
 |
-|   shot collision
 |
-|   ...determine if enemy collided with a shot
 |
 */
-Collision._shotCollision = function( shot, sI, enemy, eI )
+var Hit = function( enemies, shots )
+{
+    //
+    //  check for enemy collision with shot
+    //
+    return _shotCollision(enemies, shots);
+};
+
+/*
+|
+|
+|
+*/
+var _shooterCollision = function( enemies, shooter )
+{
+    for ( var i = enemies.length - 1; i >= 0; i-- )
+    {
+        var enemyBottom = enemies[i].y + enemies[i].r,
+            shooterTop  = shooter.y - shooter.r;
+
+        if ( enemyBottom > shooterTop )
+            return true;
+    }
+
+    return false;
+};
+
+/*
+|
+|
+|
+*/
+var _shotCollision = function( enemies, shots )
+{
+    //
+    //
+    //
+    if ( !enemies.length )
+        return false;
+
+    if ( !shots.length )
+        return false;
+
+    //
+    //
+    //
+    var hit = false;
+
+    for ( var i = enemies.length - 1; i >= 0; i-- )
+    {
+        hit = _shotCollisionEachEnemy( enemies[i], i, shots );
+
+        if ( hit )
+            return hit;
+    }
+
+    return false;
+};
+
+var _shotCollisionEachEnemy = function( enemy, enemyI, shots )
+{
+    var hit = false;
+
+    for ( var i = shots.length - 1; i >= 0; i-- )
+    {
+        hit = _shotCollisionEachShot( enemy, enemyI, shots[i], i );
+
+        if ( hit )
+            return hit;
+    }
+
+    return false;
+};
+
+var _shotCollisionEachShot = function( enemy, enemyI, shot, shotI )
 {
     var enemyEdge = {};
     enemyEdge.top    = enemy.y - enemy.r;
@@ -71,43 +121,16 @@ Collision._shotCollision = function( shot, sI, enemy, eI )
 
     //
     //  no misses means there was a hit
+    //  return the enemy and shot that should be deactivated
     //
-    Collision.hit( sI, eI );
+    return {
+        'enemy' : enemyI,
+        'shot'  : shotI,
+    };
 };
 
-/*
-|
-|   shot collision
-|
-|   ...determine if enemy collided with the shooter
-|
-*/
-Collision._shooterCollision = function( enemyBottom, shooterTop )
-{
-    if ( enemyBottom > shooterTop )
-        G.lose();
-};
-
-/*
-|
-|   hit
-|
-|   ...record a collision between shot and enemy
-|
-*/
-Collision.hit = function( sI, eI )
-{
-    Shot .data[sI].state = 'hit';
-    Enemy.data.enemies[eI].state = 'dead';
-    Score.hit();
-};
-
-/*
-|
-|   a gift for window
-|
-*/
-window.Collision = Collision;    
+window.Lose = Lose;
+window.Hit  = Hit;
 
 })();
 
