@@ -8,6 +8,14 @@ a simple web game where a shooter shoots shots at enemies.
 
 [shooty-shoot](https://mondaymachine.com/shooty-shoot/)
 
+## todo
+
+* block touch screen devices with notification
+* hide mouse during game play (?)
+* bundle all into a single html file
+* better comments
+* general code cleanup
+
 ## why?
 
 it's just a personal project to help me learn more about this kind of stuff:
