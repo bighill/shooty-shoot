@@ -10,7 +10,6 @@ a simple web game where a shooter shoots shots at enemies.
 
 ## todo
 
-* block touch screen devices with notification
 * bundle all into a single html file
 
 ## why?

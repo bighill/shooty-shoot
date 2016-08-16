@@ -8,6 +8,8 @@
 
 var init = function()
 {
+    touchScreen();
+
     playBtnListeners();
 
     State.set( 'home' );
@@ -27,6 +29,31 @@ var playBtnListeners = function()
 
     for ( var i = btns.length - 1; i >= 0; i-- )
         btns[i].addEventListener( 'click', ShootyShoot.play );
+};
+
+/*
+|
+|   touch screen notification
+|
+*/
+var touchScreen = function()
+{
+    if ( isTouchScreen() )
+        alert( 'looks like you have a touch screen device.  this game will probably not work for you.  a regular keyboard is needed.' );
+};
+
+/*
+|
+|   check for touch screen device
+|
+*/
+var isTouchScreen = function()
+{
+    return (
+        ('ontouchstart' in window)      ||
+        (navigator.MaxTouchPoints > 0)  ||
+        (navigator.msMaxTouchPoints > 0)
+    );
 };
 
 })();
