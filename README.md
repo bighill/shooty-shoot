@@ -12,8 +12,6 @@ a simple web game where a shooter shoots shots at enemies.
 
 * block touch screen devices with notification
 * bundle all into a single html file
-* better comments
-* general code cleanup
 
 ## why?
 
