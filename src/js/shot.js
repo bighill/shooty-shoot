@@ -1,16 +1,32 @@
 (function(){ 'use strict';
 
+/*
+|
+|   shot
+|
+*/
+
 var Shot = function()
 {
     this.data  = [];
     this.accel = null;
 };
 
+/*
+|
+|   init
+|
+*/
 Shot.prototype.init = function( z )
 {
     this.accel = z * 0.01;
 };
 
+/*
+|
+|   launch new shot
+|
+*/
 Shot.prototype.launch = function( d )
 {
     var s = {
@@ -23,12 +39,22 @@ Shot.prototype.launch = function( d )
     this.data.push( s );
 };
 
+/*
+|
+|   animate shots
+|
+*/
 Shot.prototype.animate = function()
 {
     this.movement();
     this.processState();
 };
 
+/*
+|
+|   process shot movement
+|
+*/
 Shot.prototype.movement = function()
 {
     if ( !this.data[0] )
@@ -38,21 +64,11 @@ Shot.prototype.movement = function()
     this.data = this.data.map( _isMiss );
 };
 
-var _move = function( i )
-{
-    i.y = i.y - i.accel;
-
-    return i;
-};
-
-var _isMiss = function( i )
-{
-    if ( i.y < 0 )
-        i.state = 'miss';
-
-    return i;
-};
-
+/*
+|
+|   process shot state
+|
+*/
 Shot.prototype.processState = function()
 {
     if ( !this.data[0] )
@@ -62,6 +78,46 @@ Shot.prototype.processState = function()
         processStateEach( this.data[i], this.data );
 };
 
+/*
+|
+|   set a shots state as 'hit'
+|
+*/
+Shot.prototype.hit = function( i )
+{
+    this.data[i].state = 'hit';
+};
+
+/*
+|
+|   helper function used in Shot.prototype.movement()
+|
+*/
+var _move = function( i )
+{
+    i.y = i.y - i.accel;
+
+    return i;
+};
+
+/*
+|
+|   helper function used in Shot.prototype.movement()
+|
+*/
+var _isMiss = function( i )
+{
+    if ( i.y < 0 )
+        i.state = 'miss';
+
+    return i;
+};
+
+/*
+|
+|   helper function used in Shot.prototype.processState()
+|
+*/
 var processStateEach = function( i, data )
 {
     if (
@@ -69,11 +125,6 @@ var processStateEach = function( i, data )
         i.state == 'hit'
     )
         data.splice( i, 1 );
-};
-
-Shot.prototype.hit = function( i )
-{
-    this.data[i].state = 'hit';
 };
 
 window.Shot = Shot;

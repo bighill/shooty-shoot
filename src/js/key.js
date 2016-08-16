@@ -1,5 +1,11 @@
 (function(){ 'use strict';
 
+/*
+|
+|   keyboard commands
+|
+*/
+
 var key = {
 
     listen : function()
@@ -9,6 +15,11 @@ var key = {
     }
 };
 
+/*
+|
+|   key press
+|
+*/
 key.keyDown = function( ev )
 {
     //
@@ -30,6 +41,11 @@ key.keyDown = function( ev )
         ShootyShoot.keyShoot( true );
 };
 
+/*
+|
+|   key un press
+|
+*/
 key.keyUp = function( ev )
 {
     //

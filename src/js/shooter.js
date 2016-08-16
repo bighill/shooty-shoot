@@ -37,6 +37,11 @@ var Shooter = function()
     this.delayShot   = false;
 };
 
+/*
+|
+|   init
+|
+*/
 Shooter.prototype.init = function( z )
 {
     this.v.r = z * this.wMultp;
@@ -46,6 +51,11 @@ Shooter.prototype.init = function( z )
     this.v.currentOpacity = this.v.defaultOpacity;
 };
 
+/*
+|
+|   animate
+|
+*/
 Shooter.prototype.animate = function( z )
 {
     var stall = this.isLeftRightStall();
@@ -59,6 +69,11 @@ Shooter.prototype.animate = function( z )
     this.fadingOpacity();
 };
 
+/*
+|
+|   move left
+|
+*/
 Shooter.prototype.moveLeft = function( z )
 {
     var x0  = this.v.x,
@@ -70,6 +85,11 @@ Shooter.prototype.moveLeft = function( z )
         this.v.x = x1;
 };
 
+/*
+|
+|   move right
+|
+*/
 Shooter.prototype.moveRight = function( z )
 {
     var x0  = this.v.x,
@@ -81,16 +101,37 @@ Shooter.prototype.moveRight = function( z )
         this.v.x = x1;
 };
 
+/*
+|
+|   stall sanity check
+|
+|   ...check if both left and right keys are pressed at the same time
+|
+*/
 Shooter.prototype.isLeftRightStall = function()
 {
     return this.isMovingLeft && this.isMovingRight;
 };
 
+/*
+|
+|   shot opacity
+|
+|   ...change the opacity when shot is fired
+|
+*/
 Shooter.prototype.setShotOpacity = function()
 {
     this.v.currentOpacity = this.v.shootOpacity;
 };
 
+/*
+|
+|   fade opacity
+|
+|   ...after shot is fired, begin fading back to original opacity
+|
+*/
 Shooter.prototype.fadingOpacity = function()
 {
     if ( this.v.currentOpacity > this.v.defaultOpacity )

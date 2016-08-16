@@ -6,6 +6,13 @@
 |
 */
 
+/*
+|
+|   check if the game has been lost
+|
+|   ...the game is lost when one or more ememies reach the shooter
+|
+*/
 var Lose = function( enemies, shooter )
 {
     //
@@ -19,7 +26,9 @@ var Lose = function( enemies, shooter )
 
 /*
 |
+|   check for hit
 |
+|   ...a hit (or kill) occurs when a shot collides with an enemy
 |
 */
 var Hit = function( enemies, shots )
@@ -32,7 +41,7 @@ var Hit = function( enemies, shots )
 
 /*
 |
-|
+|   helper function used in Lose()
 |
 */
 var _shooterCollision = function( enemies, shooter )
@@ -51,14 +60,11 @@ var _shooterCollision = function( enemies, shooter )
 
 /*
 |
-|
+|   helper function used in Hit()
 |
 */
 var _shotCollision = function( enemies, shots )
 {
-    //
-    //
-    //
     if ( !enemies.length )
         return false;
 
@@ -66,8 +72,7 @@ var _shotCollision = function( enemies, shots )
         return false;
 
     //
-    //
-    //
+
     var hit = false;
 
     for ( var i = enemies.length - 1; i >= 0; i-- )
@@ -81,6 +86,11 @@ var _shotCollision = function( enemies, shots )
     return false;
 };
 
+/*
+|
+|   helper function used in _shotCollision()
+|
+*/
 var _shotCollisionEachEnemy = function( enemy, enemyI, shots )
 {
     var hit = false;
@@ -96,6 +106,11 @@ var _shotCollisionEachEnemy = function( enemy, enemyI, shots )
     return false;
 };
 
+/*
+|
+|   helper function used in _shotCollisionEachEnemy()
+|
+*/
 var _shotCollisionEachShot = function( enemy, enemyI, shot, shotI )
 {
     var enemyEdge = {};

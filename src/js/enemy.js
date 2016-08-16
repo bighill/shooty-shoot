@@ -55,6 +55,11 @@ var Enemy = function()
     };
 };
 
+/*
+|
+|   initialize enemies
+|
+*/
 Enemy.prototype.init = function( z, v )
 {
     //
@@ -94,6 +99,11 @@ Enemy.prototype.init = function( z, v )
     }
 };
 
+/*
+|
+|   initialize each enemy
+|
+*/
 Enemy.prototype.initEachEnemy = function( x, y, r )
 {
     var enemy = {
@@ -107,12 +117,22 @@ Enemy.prototype.initEachEnemy = function( x, y, r )
     this.data.enemies.push( enemy );
 };
 
+/*
+|
+|   animate enemies
+|
+*/
 Enemy.prototype.animate = function()
 {
     this.movement();
     this.processState();
 };
 
+/*
+|
+|   determine enemy movement
+|
+*/
 Enemy.prototype.movement = function()
 {
     if ( !this.data.enemies[0] )
@@ -123,6 +143,32 @@ Enemy.prototype.movement = function()
         _moveEnemiesHorizontally( this.data );
 };
 
+/*
+|
+|   determine state of each enemies
+|
+*/
+Enemy.prototype.processState = function()
+{
+    for ( var i = this.data.enemies.length - 1; i >= 0; i-- )
+        _processEach( this.data.enemies[i], i, this.data.enemies );
+};
+
+/*
+|
+|   set an enemy's state to 'hit'
+|
+*/
+Enemy.prototype.hit = function( i )
+{
+    this.data.enemies[i].state = 'hit';
+};
+
+/*
+|
+|   helper function used in Enemy.prototype.movement()
+|
+*/
 var _moveEnemiesDown = function( d )
 {
     //
@@ -144,6 +190,11 @@ var _moveEnemiesDown = function( d )
     return d;
 };
 
+/*
+|
+|   helper function used in Enemy.prototype.movement()
+|
+*/
 var _moveEnemiesHorizontally = function( d )
 {
     //
@@ -167,6 +218,11 @@ var _moveEnemiesHorizontally = function( d )
     return d;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesDown()
+|
+*/
 var _incrementDownwardMovement = function( d )
 {
     d.yDelta = d.yDelta + d.shiftV;
@@ -174,6 +230,11 @@ var _incrementDownwardMovement = function( d )
     return d;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesDown()
+|
+*/
 var _movingDownIsComplete = function( d )
 {
     d.movingDown    = false;
@@ -182,6 +243,11 @@ var _movingDownIsComplete = function( d )
     return d;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesDown()
+|
+*/
 var _moveEnemyDown = function( enemy )
 {
     enemy.y = enemy.y + enemy.shift;
@@ -189,6 +255,11 @@ var _moveEnemyDown = function( enemy )
     return enemy;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesHorizontally()
+|
+*/
 var _incrementHorizontalMovement = function( d )
 {
     d.xDelta = d.xDelta + d.shiftV;
@@ -196,6 +267,11 @@ var _incrementHorizontalMovement = function( d )
     return d;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesHorizontally()
+|
+*/
 var _movingHorizontallyIsComplete = function( d )
 {
     d.movingRight   = !d.movingRight;
@@ -205,6 +281,11 @@ var _movingHorizontallyIsComplete = function( d )
     return d;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesHorizontally()
+|
+*/
 var _moveEnemyRight = function( enemy )
 {
     enemy.x = enemy.x + enemy.shift;
@@ -212,6 +293,11 @@ var _moveEnemyRight = function( enemy )
     return enemy;
 };
 
+/*
+|
+|   helper function used in _moveEnemiesHorizontally()
+|
+*/
 var _moveEnemyLeft = function( enemy )
 {
     enemy.x = enemy.x - enemy.shift;
@@ -219,21 +305,15 @@ var _moveEnemyLeft = function( enemy )
     return enemy;
 };
 
-Enemy.prototype.processState = function()
-{
-    for ( var i = this.data.enemies.length - 1; i >= 0; i-- )
-        _processEach( this.data.enemies[i], i, this.data.enemies );
-};
-
+/*
+|
+|   helper function used in Enemy.prototype.processState()
+|
+*/
 var _processEach = function( enemy, enemyI, enemies )
 {
     if ( enemy.state == 'hit' )
         enemies.splice( enemyI, 1 );
-};
-
-Enemy.prototype.hit = function( i )
-{
-    this.data.enemies[i].state = 'hit';
 };
 
 window.Enemy = Enemy;

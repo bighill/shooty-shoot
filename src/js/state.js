@@ -4,7 +4,7 @@
 |
 |   state
 |
-|   ...mostly just manage which pane should be visible
+|   ...manage which pane should be visible
 |
 */
 
@@ -37,6 +37,11 @@ var State = {
     ],
 };
 
+/*
+|
+|   set new state
+|
+*/
 State.set = function( s )
 {
     for ( var i = this.available.length - 1; i >= 0; i-- )
@@ -46,6 +51,13 @@ State.set = function( s )
     }
 };
 
+/*
+|
+|   apply new state
+|
+|   ...used in State.set()
+|
+*/
 State.apply = function( s )
 {
     this.current = s.id;
@@ -58,6 +70,13 @@ State.apply = function( s )
         .display = s.display;
 };
 
+/*
+|
+|   undisplay all panes
+|
+|   ...used in State.apply()
+|
+*/
 State.clear = function()
 {
     for ( var i = this.available.length - 1; i >= 0; i-- )

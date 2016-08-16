@@ -18,7 +18,7 @@ document.addEventListener( 'DOMContentLoaded', init );
 
 /*
 |
-|
+|   enable play buttons
 |
 */
 var playBtnListeners = function()

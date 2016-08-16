@@ -116,11 +116,7 @@ var _setElText = function( els, txt )
     return txt;
 };
 
-/*
-|
-|
-|
-*/
+
 window.Score = Score;
 
 })();

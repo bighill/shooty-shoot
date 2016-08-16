@@ -1,5 +1,13 @@
 (function(){ 'use strict';
 
+/*
+|
+|   shooty shoot
+|
+|   ...primary controller
+|
+*/
+
 var ShootyShoot = {
 
     data    : {},
@@ -8,6 +16,11 @@ var ShootyShoot = {
     enemy   : {},
 };
 
+/*
+|
+|   play
+|
+*/
 ShootyShoot.play = function()
 {
     State.set( 'shooty-shoot' );
@@ -17,7 +30,7 @@ ShootyShoot.play = function()
 
 /*
 |
-|
+|   load (initialize)
 |
 */
 ShootyShoot.load = function()
@@ -66,7 +79,7 @@ ShootyShoot.load = function()
 
 /*
 |
-|
+|   draw each frame
 |
 */
 ShootyShoot.draw = function()
@@ -98,7 +111,9 @@ ShootyShoot.drawFromRequestAnimationFrame = function()
 
 /*
 |
+|   animate
 |
+|   ...adjust data for next frame
 |
 */
 ShootyShoot.animate = function()
@@ -263,11 +278,7 @@ ShootyShoot.win = function()
     State.set( 'win' );
 };
 
-/*
-|
-|
-|
-*/
+
 window.ShootyShoot = ShootyShoot;
 })();
 

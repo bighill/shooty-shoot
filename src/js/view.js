@@ -4,10 +4,17 @@
 |
 |   views
 |
+|   ...canvas templates for each piece of the game
+|
 */
 
 var view = {};
 
+/*
+|
+|   shooter
+|
+*/
 view.shooter = function( d, ctx )
 {
     ctx.beginPath();
@@ -16,12 +23,24 @@ view.shooter = function( d, ctx )
     ctx.fill();
 };
 
+/*
+|
+|   enemies
+|
+*/
 view.enemies = function( d, ctx )
 {
     for ( var i = d.length - 1; i >= 0; i-- )
         enemy( d[i], ctx );
 };
 
+/*
+|
+|   enemy
+|
+|   ...used by view.enemies()
+|
+*/
 var enemy = function( i, ctx )
 {
     ctx.beginPath();
@@ -30,12 +49,24 @@ var enemy = function( i, ctx )
     ctx.fill();
 };
 
+/*
+|
+|   shots
+|
+*/
 view.shots = function( d, ctx )
 {
     for ( var i = d.length - 1; i >= 0; i-- )
         shot( d[i], ctx );
 };
 
+/*
+|
+|   shot
+|
+|   ...used by view.shots()
+|
+*/
 var shot = function( i, ctx )
 {
     ctx.beginPath();
