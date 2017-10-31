@@ -6,7 +6,7 @@ a simple web game where a shooter shoots shots at enemies.
 
 ## demo
 
-[shooty-shoot](https://mondaymachine.com/shooty-shoot/)
+[shooty-shoot](https://bighill.org/shooty-shoot/)
 
 ## why?
 
