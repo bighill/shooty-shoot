@@ -14,24 +14,21 @@ var gulp        = require( 'gulp' ),
 */
 var input  = {
         'js'        : 'src/js/*.js',
-        'jsLib'     : [
-        ],
         'less'      : 'src/less/css.less',
-        'htmlRoot'  : 'public',
-        'html'      : 'public/*.html'
+        'htmlRoot'  : './',
+        'html'      : './*.html'
     },
 
     output = {
-        'js'        : 'public',
+        'js'        : './',
         'jsFile'    : 'js.js',
-        'jsLib'     : 'public/js/lib',
-        'css'       : 'public'
+        'css'       : './'
     },
 
     watch = {
         'js'    : 'src/js/*.js',
         'less'  : 'src/less/*.less',
-        'html'  : 'public/*.html'
+        'html'  : './*.html'
     };
 
 /*
@@ -61,19 +58,6 @@ gulp.task('js', function()
         .pipe( gulp.dest(output.js) )
         .pipe( connect.reload() );
 });
-
-/*
-|
-|   js lib
-|
-*/
-/*
-gulp.task('jslib', function()
-{
-    gulp.src( input.jsLib )
-    .pipe(gulp.dest( output.jsLib )); // simple copy
-})
-*/
 
 /*
 |
@@ -132,9 +116,5 @@ gulp.task('watch', function()
 |
 |   default
 |
-*/
-/*
-gulp.task( 'default', ['jslib', 'connect', 'watch'] );
-gulp.task( 'default', ['jshint', 'js', 'css'] );
 */
 gulp.task( 'default', ['jshint', 'js', 'css', 'connect', 'watch'] );
