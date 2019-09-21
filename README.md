@@ -1,20 +1,17 @@
-# shooty-shoot
+# Shooty Shoot
 
-## description
+A simple web game where a shooter shoots shots at enemies.
 
-a simple web game where a shooter shoots shots at enemies.
+## Demo
 
-## demo
+[Shooty Shoot](https://bighill.github.io/shooty-shoot/)
 
-[shooty-shoot](https://bighill.org/shooty-shoot/)
+## Why?
 
-## why?
+This is a personal project from the early 2010's.
 
-it's just a personal project to help me learn more about this kind of stuff:
-* html5
-* css3
-* flexbox
-* js
-* canvas
-* js/canvas animation
-* functional programming
+The game is of course stupid, but it really helped me learn these frontend programming skills:
+* Canvas in general
+* JS/Canvas animation
+* Functional programming
+* Flexbox
